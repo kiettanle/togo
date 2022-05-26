@@ -24,7 +24,7 @@
     "migration:down": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js schema:drop -f ormconfig.js",
     "migration:seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n ormconfig.cli.js",
     "migration:generate": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js migration:generate -d src/database/migrations/mssql -f ormconfig.cli.js -n",
-    "mssql:initialize": "rm -f ./src/database/migrations/mssql/*.ts && npm run migration:down && npm run migration:generate Initial && npm run migration:run && npm run format"
+    "mssql:initialize": "rm -f ./src/database/migrations/mssql/*.ts && npm run migration:down && npm run migration:generate Initial && npm run migration:up && npm run format"
   },
   "engines": {
     "node": "14"

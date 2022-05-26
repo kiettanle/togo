@@ -14,6 +14,7 @@ const commonEnv = {
 
   server: {
     host: process.env.HOST || '0.0.0.0',
+    domainURL: process.env.DOMAIN_URL || 'http://localhost:3000',
     port: process.env.PORT || 3000,
   },
 
