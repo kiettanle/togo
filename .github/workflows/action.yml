@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: |
           ls -ll
-          npm install
+          npm install --force
 
       # Runs a set of commands using the runners shell
       - name: Run Unit Test
