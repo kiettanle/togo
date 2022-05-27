@@ -21,6 +21,12 @@ const permissions = [
   { id: random.uuid(), name: 'List User', resource: PermissionResource.Users, action: PermissionAction.List },
   { id: random.uuid(), name: 'Detail User', resource: PermissionResource.Users, action: PermissionAction.Detail },
   { id: random.uuid(), name: 'Delete User', resource: PermissionResource.Users, action: PermissionAction.Delete },
+  { id: random.uuid(), name: 'Create Task', resource: PermissionResource.Tasks, action: PermissionAction.Create },
+  { id: random.uuid(), name: 'Update Task', resource: PermissionResource.Tasks, action: PermissionAction.Update },
+  { id: random.uuid(), name: 'List Task', resource: PermissionResource.Tasks, action: PermissionAction.List },
+  { id: random.uuid(), name: 'Detail Task', resource: PermissionResource.Tasks, action: PermissionAction.Detail },
+  { id: random.uuid(), name: 'Delete Task', resource: PermissionResource.Tasks, action: PermissionAction.Delete },
+  { id: random.uuid(), name: 'Pick Task', resource: PermissionResource.Tasks, action: PermissionAction.Pick },
 ];
 
 const baseActions = [
@@ -30,6 +36,8 @@ const baseActions = [
   PermissionAction.Detail,
   PermissionAction.Delete,
 ];
+
+const taskActions = [PermissionAction.Pick, PermissionAction.List];
 
 const fullActions = [...baseActions];
 
@@ -43,16 +51,12 @@ const mapRolePermission = [
   },
   {
     roleName: USER_ROLE_NAME,
-    permissions: [
-      { resource: PermissionResource.Users, actions: fullActions },
-      { resource: PermissionResource.Tasks, actions: fullActions },
-    ],
+    permissions: [{ resource: PermissionResource.Tasks, actions: taskActions }],
   },
 ];
 
 const rolePermissions = [];
 
-//map role -  permission
 mapRolePermission.forEach((x) => {
   const role = roles.find((role) => role.name == x.roleName);
 

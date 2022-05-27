@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { environment } from '@env/environment';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,7 +14,7 @@ import { User } from './entities/user.entity';
     }),
   ],
   providers: [UserService],
-  controllers: [UserController],
+  // controllers: [UserController],
   exports: [UserService, TypeOrmModule],
 })
 export class UserModule {}

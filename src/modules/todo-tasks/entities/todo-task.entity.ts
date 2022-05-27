@@ -1,39 +1,43 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 import { CustomBaseEntity } from '@modules/common/entities/base.entity';
 import { User } from '@modules/users/entities/user.entity';
 import { TaskStatusEnum } from '../enums/task-status.enum';
+import { Exclude } from 'class-transformer';
 
 @Entity('tasks')
 export class TodoTask extends CustomBaseEntity {
   static entityName: string = 'TodoTask';
 
-  @ApiProperty({ type: 'string', example: '[BUG][Urgent] User cannot log in' })
-  @Column({ type: 'nvarchar', length: 100 })
-  task: string;
+  @ApiProperty({ type: 'string', example: 'TODO-1000: [BUG][Urgent] User cannot log in' })
+  @Column({ type: 'nvarchar', length: 200 })
+  summary: string;
 
   @ApiProperty({ type: 'string', example: 'User cannot log in the system with username and password' })
   @Column({ nullable: true, type: 'nvarchar', length: 500 })
   description: string;
 
-  @Column({ name: 'assigned_to' })
-  assignedToUserId: string;
+  @Exclude()
+  @Index('IDX_TodoTask_Assignee_Id')
+  @Column({ name: 'assignee_id', nullable: true })
+  assigneeId: string;
 
-  @OneToOne(() => User)
-  @JoinColumn({ name: 'assigned_to', referencedColumnName: 'id' })
-  assignedTo: User;
+  // 1 User has Many Tasks
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'assignee_id', referencedColumnName: 'id' })
+  assignee: User;
 
   @ApiProperty({
     type: TaskStatusEnum,
     enum: TaskStatusEnum,
     enumName: 'TaskStatusEnum',
-    example: TaskStatusEnum.Created,
+    example: TaskStatusEnum.Todo,
   })
-  @Column({ default: TaskStatusEnum.Created })
+  @Column({ default: TaskStatusEnum.Todo })
   status: TaskStatusEnum;
 
-  constructor(partial: Partial<TodoTask>) {
+  constructor(partial?: Partial<TodoTask>) {
     super();
     this.entityName = TodoTask.entityName;
     Object.assign(this, partial);

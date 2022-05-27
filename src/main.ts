@@ -4,11 +4,16 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { environment } from '@env/environment';
+import { AppExceptionsFilter } from './app.exception.filter';
+import { logger } from '@modules/common/middlewares/logger.middleware';
 
 const isSwaggerEnabled = process.env.ENABLED_SWAGGER === 'true' || process.env.NODE_ENV == 'development';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalFilters(new AppExceptionsFilter());
+  app.use(logger);
 
   // Enable swagger for development
   if (isSwaggerEnabled) {

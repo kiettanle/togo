@@ -14,15 +14,22 @@ const users = [
     roleId: ADMIN_ROLE_ID,
   },
   {
-    username: 'user',
-    email: 'user@gmail.com',
+    username: 'user1',
+    email: 'user1@gmail.com',
+    password: createPasswordHash(DEFAULT_USER_PASSWORD),
+    displayName: `User ${name.findName()}`,
+    roleId: USER_ROLE_ID,
+  },
+  {
+    username: 'user2',
+    email: 'user2@gmail.com',
     password: createPasswordHash(DEFAULT_USER_PASSWORD),
     displayName: `User ${name.findName()}`,
     roleId: USER_ROLE_ID,
   },
 ];
 
-export default class CreateUser implements Seeder {
+export default class CreateUserSeeder implements Seeder {
   tableName = 'users';
 
   public async run(factory: Factory, connection: Connection): Promise<any> {

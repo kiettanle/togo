@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Initial1653575540767 implements MigrationInterface {
-  name = 'Initial1653575540767';
+export class Initial1653636109244 implements MigrationInterface {
+  name = 'Initial1653636109244';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -49,16 +49,26 @@ export class Initial1653575540767 implements MigrationInterface {
     await queryRunner.query(`CREATE INDEX "IDX_User_Display_Name" ON "users" ("display_name") `);
     await queryRunner.query(`CREATE INDEX "IDX_User_Role_Id" ON "users" ("role_id") `);
     await queryRunner.query(
-      `CREATE TABLE "tasks" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_8d12ff38fcc62aaba2cab748772" DEFAULT NEWSEQUENTIALID(), "created_by" int, "updated_by" int, "created_at" datetime2 NOT NULL CONSTRAINT "DF_cb3724030e9674f2c17b7573aa5" DEFAULT getdate(), "updated_at" datetime2 NOT NULL CONSTRAINT "DF_02edb0ba1ef4287a15bc4c271ee" DEFAULT getdate(), "deleted_at" datetime2, "task" nvarchar(100) NOT NULL, "description" nvarchar(500), "assigned_to" uniqueidentifier NOT NULL, "status" nvarchar(255) NOT NULL CONSTRAINT "DF_6086c8dafbae729a930c04d8651" DEFAULT 'created', CONSTRAINT "PK_8d12ff38fcc62aaba2cab748772" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "user_task_configs" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_a025c2aa82902f4729560897481" DEFAULT NEWSEQUENTIALID(), "created_by" int, "updated_by" int, "created_at" datetime2 NOT NULL CONSTRAINT "DF_3f0c3c49ab74952c14b5fce89ad" DEFAULT getdate(), "updated_at" datetime2 NOT NULL CONSTRAINT "DF_1ae801798cb6126c984431c1b62" DEFAULT getdate(), "deleted_at" datetime2, "number_of_task_per_day" int NOT NULL, "user_id" uniqueidentifier NOT NULL, "date" date NOT NULL, CONSTRAINT "PK_a025c2aa82902f4729560897481" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_de23bdafe97360aa65fef45988" ON "user_task_configs" ("created_by") `);
+    await queryRunner.query(`CREATE INDEX "IDX_bfd508c7ee289cda9fc1004efc" ON "user_task_configs" ("updated_by") `);
+    await queryRunner.query(`CREATE INDEX "IDX_3f0c3c49ab74952c14b5fce89a" ON "user_task_configs" ("created_at") `);
+    await queryRunner.query(`CREATE INDEX "IDX_1ae801798cb6126c984431c1b6" ON "user_task_configs" ("updated_at") `);
+    await queryRunner.query(`CREATE INDEX "IDX_795dae0c1f1e7ee852c72e8435" ON "user_task_configs" ("deleted_at") `);
+    await queryRunner.query(
+      `CREATE INDEX "IDX_User_Task_Number_Of_Task_Per_Day" ON "user_task_configs" ("number_of_task_per_day") `,
+    );
+    await queryRunner.query(`CREATE INDEX "IDX_User_Task_User_Id" ON "user_task_configs" ("user_id") `);
+    await queryRunner.query(
+      `CREATE TABLE "tasks" ("id" uniqueidentifier NOT NULL CONSTRAINT "DF_8d12ff38fcc62aaba2cab748772" DEFAULT NEWSEQUENTIALID(), "created_by" int, "updated_by" int, "created_at" datetime2 NOT NULL CONSTRAINT "DF_cb3724030e9674f2c17b7573aa5" DEFAULT getdate(), "updated_at" datetime2 NOT NULL CONSTRAINT "DF_02edb0ba1ef4287a15bc4c271ee" DEFAULT getdate(), "deleted_at" datetime2, "summary" nvarchar(200) NOT NULL, "description" nvarchar(500), "assignee_id" uniqueidentifier, "status" nvarchar(255) NOT NULL CONSTRAINT "DF_6086c8dafbae729a930c04d8651" DEFAULT 'todo', CONSTRAINT "PK_8d12ff38fcc62aaba2cab748772" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(`CREATE INDEX "IDX_9fc727aef9e222ebd09dc8dac0" ON "tasks" ("created_by") `);
     await queryRunner.query(`CREATE INDEX "IDX_5d927ef9f86fac1f1671d093a0" ON "tasks" ("updated_by") `);
     await queryRunner.query(`CREATE INDEX "IDX_cb3724030e9674f2c17b7573aa" ON "tasks" ("created_at") `);
     await queryRunner.query(`CREATE INDEX "IDX_02edb0ba1ef4287a15bc4c271e" ON "tasks" ("updated_at") `);
     await queryRunner.query(`CREATE INDEX "IDX_68d6a27df9f5cc119cac1df190" ON "tasks" ("deleted_at") `);
-    await queryRunner.query(
-      `CREATE UNIQUE INDEX "REL_5770b28d72ca90c43b1381bf78" ON "tasks" ("assigned_to") WHERE "assigned_to" IS NOT NULL`,
-    );
+    await queryRunner.query(`CREATE INDEX "IDX_TodoTask_Assignee_Id" ON "tasks" ("assignee_id") `);
     await queryRunner.query(
       `CREATE TABLE "role_permissions" ("role_id" uniqueidentifier NOT NULL, "permission_id" uniqueidentifier NOT NULL, CONSTRAINT "PK_25d24010f53bb80b78e412c9656" PRIMARY KEY ("role_id", "permission_id"))`,
     );
@@ -68,7 +78,10 @@ export class Initial1653575540767 implements MigrationInterface {
       `ALTER TABLE "users" ADD CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "tasks" ADD CONSTRAINT "FK_5770b28d72ca90c43b1381bf787" FOREIGN KEY ("assigned_to") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+      `ALTER TABLE "user_task_configs" ADD CONSTRAINT "FK_e46f698148c0fcb72db3dba9800" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "tasks" ADD CONSTRAINT "FK_855d484825b715c545349212c7f" FOREIGN KEY ("assignee_id") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "role_permissions" ADD CONSTRAINT "FK_178199805b901ccd220ab7740ec" FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE`,
@@ -81,18 +94,27 @@ export class Initial1653575540767 implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`ALTER TABLE "role_permissions" DROP CONSTRAINT "FK_17022daf3f885f7d35423e9971e"`);
     await queryRunner.query(`ALTER TABLE "role_permissions" DROP CONSTRAINT "FK_178199805b901ccd220ab7740ec"`);
-    await queryRunner.query(`ALTER TABLE "tasks" DROP CONSTRAINT "FK_5770b28d72ca90c43b1381bf787"`);
+    await queryRunner.query(`ALTER TABLE "tasks" DROP CONSTRAINT "FK_855d484825b715c545349212c7f"`);
+    await queryRunner.query(`ALTER TABLE "user_task_configs" DROP CONSTRAINT "FK_e46f698148c0fcb72db3dba9800"`);
     await queryRunner.query(`ALTER TABLE "users" DROP CONSTRAINT "FK_a2cecd1a3531c0b041e29ba46e1"`);
     await queryRunner.query(`DROP INDEX "IDX_17022daf3f885f7d35423e9971" ON "role_permissions"`);
     await queryRunner.query(`DROP INDEX "IDX_178199805b901ccd220ab7740e" ON "role_permissions"`);
     await queryRunner.query(`DROP TABLE "role_permissions"`);
-    await queryRunner.query(`DROP INDEX "REL_5770b28d72ca90c43b1381bf78" ON "tasks"`);
+    await queryRunner.query(`DROP INDEX "IDX_TodoTask_Assignee_Id" ON "tasks"`);
     await queryRunner.query(`DROP INDEX "IDX_68d6a27df9f5cc119cac1df190" ON "tasks"`);
     await queryRunner.query(`DROP INDEX "IDX_02edb0ba1ef4287a15bc4c271e" ON "tasks"`);
     await queryRunner.query(`DROP INDEX "IDX_cb3724030e9674f2c17b7573aa" ON "tasks"`);
     await queryRunner.query(`DROP INDEX "IDX_5d927ef9f86fac1f1671d093a0" ON "tasks"`);
     await queryRunner.query(`DROP INDEX "IDX_9fc727aef9e222ebd09dc8dac0" ON "tasks"`);
     await queryRunner.query(`DROP TABLE "tasks"`);
+    await queryRunner.query(`DROP INDEX "IDX_User_Task_User_Id" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_User_Task_Number_Of_Task_Per_Day" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_795dae0c1f1e7ee852c72e8435" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_1ae801798cb6126c984431c1b6" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_3f0c3c49ab74952c14b5fce89a" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_bfd508c7ee289cda9fc1004efc" ON "user_task_configs"`);
+    await queryRunner.query(`DROP INDEX "IDX_de23bdafe97360aa65fef45988" ON "user_task_configs"`);
+    await queryRunner.query(`DROP TABLE "user_task_configs"`);
     await queryRunner.query(`DROP INDEX "IDX_User_Role_Id" ON "users"`);
     await queryRunner.query(`DROP INDEX "IDX_User_Display_Name" ON "users"`);
     await queryRunner.query(`DROP INDEX "IDX_User_Mobile" ON "users"`);
