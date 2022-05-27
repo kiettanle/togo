@@ -1,4 +1,4 @@
-import { Connection, ObjectLiteral, SelectQueryBuilder } from 'typeorm';
+import { Connection, ObjectLiteral } from 'typeorm';
 import { safeKey } from '.';
 
 export function orderByBuilder(
@@ -90,26 +90,3 @@ export async function createForeignKeys(connection: Connection): Promise<void> {
     }
   }
 }
-
-export const getPagingAndOrderBy = (
-  queryBuilder: SelectQueryBuilder<any>,
-  page: number,
-  perPage: number,
-  orderBys: Record<string, 'ASC' | 'DESC'>[],
-): SelectQueryBuilder<any> => {
-  const offset = (page - 1) * perPage;
-  const skip = offset > 0 ? offset : 0;
-  const take = perPage > 0 ? perPage : 10;
-
-  // Pagination
-  queryBuilder.skip(skip).take(take);
-
-  // Order
-  orderBys.forEach((orderBy) => {
-    Object.entries(orderBy).forEach(([k, v]) => {
-      queryBuilder = queryBuilder.addOrderBy(k, v);
-    });
-  });
-
-  return queryBuilder;
-};

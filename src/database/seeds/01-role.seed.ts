@@ -5,7 +5,7 @@ import { cleanTable } from '@modules/common/utils/query';
 
 const tableName = 'roles';
 
-export default class CreateRole implements Seeder {
+export default class CreateRolSeeder implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
     await cleanTable(connection, tableName);
 

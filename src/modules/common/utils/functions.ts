@@ -1,6 +1,4 @@
-import { generatePaginationLinks, safeKey } from './';
-import { environment } from '@env/environment';
-import { Request } from 'express';
+import { safeKey } from './';
 import { formatDate } from './date-time.helper';
 
 /**
@@ -43,23 +41,4 @@ export const pickNotEmpty = (
   });
 
   return newObj;
-};
-
-export const generatePagination = (
-  req: Request,
-  path: string,
-  page: number = 1,
-  perPage: number = 25,
-  total: number = 0,
-  unread: number = 0,
-) => {
-  const baseUrl = `${environment.server.domainURL}/${path}`;
-  const link: string = generatePaginationLinks(baseUrl, page, perPage, Math.ceil(total / perPage));
-
-  if (link.length > 0) {
-    req.res.set('Link', link);
-  }
-
-  req.res.set('x-total-count', `${total}`);
-  req.res.set('x-unread', `${unread}`);
 };

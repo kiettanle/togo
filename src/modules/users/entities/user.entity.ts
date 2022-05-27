@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Optional } from '@nestjs/common';
-import { Index, Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Index, Entity, Column, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Expose, Exclude } from 'class-transformer';
 import { IsString, IsEmail, MaxLength } from 'class-validator';
+
 import { CustomBaseEntity } from '@modules/common/entities/base.entity';
 import { Role } from '@modules/roles/entities/role.entity';
+import { UserTaskConfig } from './user-task-config.entity';
+import { formatDate } from '@modules/common/utils/date-time.helper';
+import { TodoTask } from '@modules/todo-tasks/entities/todo-task.entity';
 
 @Entity('users')
 export class User extends CustomBaseEntity {
@@ -62,8 +66,29 @@ export class User extends CustomBaseEntity {
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
   role: Role;
 
+  @Expose()
+  @ApiProperty()
+  @OneToMany(() => UserTaskConfig, (task) => task.user)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  userTaskConfigs: UserTaskConfig[];
+
+  get numberOfTaskToday() {
+    const numberOfTask = this.userTaskConfigs.find((x) => formatDate(new Date(), 'yyyy-MM-dd') === x.date.toString());
+
+    return numberOfTask?.numberOfTaskPerDay || 1;
+  }
+
   constructor(partial: Partial<User>) {
     super();
+    this.entityName = User.entityName;
     Object.assign(this, partial);
+  }
+
+  async myTotalTask(): Promise<number> {
+    return await TodoTask.count({ where: { assigneeId: this.id } });
+  }
+
+  async canPickMoreTask(): Promise<boolean> {
+    return (await this.myTotalTask()) > this.numberOfTaskToday;
   }
 }

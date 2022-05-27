@@ -3,7 +3,7 @@ import { Connection } from 'typeorm';
 import { permissions } from './data';
 import { cleanTable } from '@modules/common/utils/query';
 
-export default class CreatePermission implements Seeder {
+export default class CreatePermissionSeeder implements Seeder {
   tableName = 'permissions';
 
   public async run(factory: Factory, connection: Connection): Promise<any> {

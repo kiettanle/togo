@@ -13,7 +13,7 @@ const alias = 'users';
 @Injectable()
 export class UserService extends BaseService {
   constructor(@InjectRepository(User) private readonly repo: Repository<User>) {
-    super(['role', 'role.permissions']);
+    super(['role', 'role.permissions', 'userTaskConfigs']);
   }
 
   getRepository(manager?: EntityManager): Repository<User> {

@@ -4,4 +4,5 @@ export enum PermissionAction {
   Detail = 'detail',
   List = 'list',
   Delete = 'delete',
+  Pick = 'pick',
 }
