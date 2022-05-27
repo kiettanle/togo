@@ -11,7 +11,7 @@ import {
 import { Expose, Exclude } from 'class-transformer';
 
 export abstract class CustomBaseEntity extends BaseEntity {
-  @Exclude()
+  @Expose()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -43,13 +43,14 @@ export abstract class CustomBaseEntity extends BaseEntity {
   deletedAt?: Date;
 
   @Exclude()
-  private name: string = '';
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  private _entityName: string = '';
 
   public get entityName(): string {
-    return this.name;
+    return this._entityName;
   }
 
   public set entityName(value: string) {
-    this.name = value;
+    this._entityName = value;
   }
 }
