@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: |
           ls -ll
-          npm install
+          npm run install
 
       # Runs a set of commands using the runners shell
       - name: Run Unit Test
-        run: npm test
+        run: npm run test
