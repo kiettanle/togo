@@ -29,9 +29,5 @@ export class CreateTokenDto extends PartialType(BaseDto) {
 
   @ApiProperty()
   @IsOptional()
-  readonly fcmToken?: string;
-
-  @ApiProperty()
-  @IsOptional()
   readonly rememberMe?: boolean;
 }

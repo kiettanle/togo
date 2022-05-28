@@ -18,15 +18,15 @@ const roles = [
 const permissions = [
   {
     id: faker.datatype.uuid(),
-    name: 'Update User',
-    resource: PermissionResource.Users,
-    action: PermissionAction.Update,
-  },
-  {
-    id: faker.datatype.uuid(),
     name: 'Create User',
     resource: PermissionResource.Users,
     action: PermissionAction.Create,
+  },
+  {
+    id: faker.datatype.uuid(),
+    name: 'Update User',
+    resource: PermissionResource.Users,
+    action: PermissionAction.Update,
   },
   { id: faker.datatype.uuid(), name: 'List User', resource: PermissionResource.Users, action: PermissionAction.List },
   {
