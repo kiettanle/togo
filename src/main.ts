@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -14,6 +14,17 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AppExceptionsFilter());
   app.use(logger);
+
+  // For validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      skipMissingProperties: false,
+      forbidUnknownValues: false,
+    }),
+  );
 
   // Enable swagger for development
   if (isSwaggerEnabled) {

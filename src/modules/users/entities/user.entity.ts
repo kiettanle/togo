@@ -89,6 +89,6 @@ export class User extends CustomBaseEntity {
   }
 
   async canPickMoreTask(): Promise<boolean> {
-    return (await this.myTotalTask()) > this.numberOfTaskToday;
+    return (await this.myTotalTask()) < this.numberOfTaskToday;
   }
 }

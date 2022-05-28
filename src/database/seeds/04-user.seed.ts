@@ -1,5 +1,5 @@
 import { Factory, Seeder } from 'typeorm-seeding';
-import { name } from 'faker';
+import { faker } from '@faker-js/faker';
 import { Connection } from 'typeorm';
 import { createPasswordHash } from '@modules/common/utils';
 import { USER_ROLE_ID, ADMIN_ROLE_ID, DEFAULT_USER_PASSWORD } from '@modules/common/constant';
@@ -10,21 +10,21 @@ const users = [
     username: 'admin',
     email: 'admin@gmail.com',
     password: createPasswordHash(DEFAULT_USER_PASSWORD),
-    displayName: `Admin ${name.findName()}`,
+    displayName: `Admin ${faker.name.findName()}`,
     roleId: ADMIN_ROLE_ID,
   },
   {
     username: 'user1',
     email: 'user1@gmail.com',
     password: createPasswordHash(DEFAULT_USER_PASSWORD),
-    displayName: `User ${name.findName()}`,
+    displayName: `User ${faker.name.findName()}`,
     roleId: USER_ROLE_ID,
   },
   {
     username: 'user2',
     email: 'user2@gmail.com',
     password: createPasswordHash(DEFAULT_USER_PASSWORD),
-    displayName: `User ${name.findName()}`,
+    displayName: `User ${faker.name.findName()}`,
     roleId: USER_ROLE_ID,
   },
 ];

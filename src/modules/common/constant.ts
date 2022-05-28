@@ -1,8 +1,8 @@
-import { random } from 'faker';
+import { faker } from '@faker-js/faker';
 
-export const ADMIN_ROLE_ID = random.uuid();
+export const ADMIN_ROLE_ID = faker.datatype.uuid();
 export const ADMIN_ROLE_NAME = 'Admin';
-export const USER_ROLE_ID = random.uuid();
+export const USER_ROLE_ID = faker.datatype.uuid();
 export const USER_ROLE_NAME = 'User';
 
 export const DEFAULT_PER_PAGE = 25;

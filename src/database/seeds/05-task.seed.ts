@@ -1,5 +1,5 @@
 import { Factory, Seeder } from 'typeorm-seeding';
-import * as faker from 'faker';
+import { faker } from '@faker-js/faker';
 import { Connection } from 'typeorm';
 
 import { cleanTable } from '@modules/common/utils/query';
